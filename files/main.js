@@ -225,5 +225,27 @@ document.addEventListener("DOMContentLoaded", function (event) {
      * the first category.
      */
 
+    fetch('http://localhost:3000/api/categories')
+        .then(result => result.json())
+        .then(results => {
+            let navUl = document.querySelector("nav ul");
+            for (let category of results){
+                let a = document.createElement("a");
+                a.href = '#' + category.name;
+                a.textContent = category.title;
+                a.onclick = () => {
+                    fetch(`http://localhost:3000/api/categories/${category.name}/books`)
+                    .then(result=> result.json())
+                    .then(resultBook => {
+                        bookStore.addToDOM(category, resultBook);
+                    })
+                }
+                let li = document.createElement("li");
+                li.append(a);
+                navUl.append(li);
+            }
+            navUl.children[1].firstChild.click();
+        });
 });
+
 

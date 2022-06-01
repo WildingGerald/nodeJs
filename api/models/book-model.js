@@ -74,7 +74,7 @@ class BookModel {
             if (books.find(book => book.id === id)) {
                 return category;
             }
-        };
+        }
 
         return null;
     }
@@ -97,14 +97,24 @@ class BookModel {
     createBook(category, book) {
         /* --- Task 2 ---
          * Add the received book to the given category in the model and return it. */
+        this.addBook(this.resolveCategory(category), book);
+        return this.getBook(book.id);
     }
 
     updateBook(id, book) {
         /* --- Task 3 --- Update the book with the given id in the model */
+        let localBook = this.getBook(id);
+
+        if (localBook){
+            Object.assign(localBook, book);
+        }else {
+            throw new Error("Update Failed");
+        }
     }
 
     deleteBook(id) {
         /* --- Task 4 --- Delete the book with the given id from the model */
+        this.getBooksAsMap(this.getCategory(id)).delete(id);
     }
 }
 

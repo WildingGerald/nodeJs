@@ -12,7 +12,7 @@ class BookController {
     }
 
     getBook(req, res) {
-        const book = model.getBook(req.params.id);
+        const book = model.getBook(parseInt(req.params.id));
         if (book) {
             res.send(book);
         } else {
@@ -57,6 +57,14 @@ class BookController {
          * 
          * After you created the book in the model, return it in the response
          */
+        let book = req.body;
+
+        if(this.checkBookProperties(res, book)){
+            model.createBook(req.params.category, book);
+            res.send(book);
+        }else{
+            res.status(400).send("Failed check");
+        }
     }
 
     updateBook = (req, res) => {
@@ -70,6 +78,14 @@ class BookController {
          * 
          * After you updated the book in the model, send back status 200.
          */
+        let book = req.body;
+
+        if(this.checkBookProperties(res, book)){
+            model.updateBook(parseInt(req.params.id), book);
+            res.status(200).send("Book Updated");
+        }else{
+            res.status(400).send("Update Failed");
+        }
     }
 
     deleteBook(req, res) {
@@ -79,6 +95,14 @@ class BookController {
          * 
          * After deleting the book, send back status 204.
          */
+        let bookId = parseInt(req.params.id);
+
+        if(model.getBook(bookId)){
+            model.deleteBook(bookId);
+            res.status(200).send("Book Deleted");
+        }else{
+            res.status(400).send("Delete Failed");
+        }
     }
 }
 
